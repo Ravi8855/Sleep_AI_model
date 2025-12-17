@@ -1,0 +1,204 @@
+import React, { useState } from 'react';
+import api from '../api/client';
+import useUserStore from '../store/userStore';
+
+export default function SleepForm() {
+  const [form, setForm] = useState({
+    date: new Date().toISOString().slice(0, 10),
+    duration: 7,
+    startTime: '23:00',
+    endTime: '06:00',
+    awakenings: 0,
+    stress: 3,
+    caffeine: 0,
+    screen_time: 30,
+    exercise: 30,
+    mood: 4
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const handle = (k, v) => setForm((prev) => ({ ...prev, [k]: v }));
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const res = await api.post('/sleep/add', form);
+      setShowSuccess(true);
+      // Reset form after successful submission
+      setForm({
+        date: new Date().toISOString().slice(0, 10),
+        duration: 7,
+        startTime: '23:00',
+        endTime: '06:00',
+        awakenings: 0,
+        stress: 3,
+        caffeine: 0,
+        screen_time: 30,
+        exercise: 30,
+        mood: 4
+      });
+      // Hide success message after 3 seconds
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (err) {
+      console.error('Save error', err);
+      alert('Save failed (maybe login required)');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Helper function to render slider inputs
+  const SliderInput = ({ label, name, value, min, max, step = 1, onChange }) => (
+    <div className="mb-4">
+      <div className="flex justify-between mb-1">
+        <label className="text-sm font-medium text-gray-700">{label}</label>
+        <span className="text-sm font-semibold text-[--accent]">{value}</span>
+      </div>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(name, parseFloat(e.target.value))}
+        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[--accent]"
+      />
+      <div className="flex justify-between text-xs text-gray-500 mt-1">
+        <span>{min}</span>
+        <span>{max}</span>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="card p-6">
+      <h3 className="text-xl font-bold mb-4 text-center">Sleep Tracker</h3>
+      
+      {showSuccess && (
+        <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-center">
+          Sleep log saved successfully!
+        </div>
+      )}
+
+      <form onSubmit={submit} className="space-y-4">
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+          <input
+            type="date"
+            value={form.date}
+            onChange={(e) => handle('date', e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[--accent] focus:border-transparent"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
+            <input
+              type="time"
+              value={form.startTime}
+              onChange={(e) => handle('startTime', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[--accent] focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">End Time</label>
+            <input
+              type="time"
+              value={form.endTime}
+              onChange={(e) => handle('endTime', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[--accent] focus:border-transparent"
+            />
+          </div>
+        </div>
+
+        <SliderInput 
+          label="Sleep Duration (hours)" 
+          name="duration" 
+          value={form.duration} 
+          min={1} 
+          max={12} 
+          step={0.25}
+          onChange={handle} 
+        />
+
+        <SliderInput 
+          label="Awakenings" 
+          name="awakenings" 
+          value={form.awakenings} 
+          min={0} 
+          max={10} 
+          onChange={handle} 
+        />
+
+        <SliderInput 
+          label="Stress Level" 
+          name="stress" 
+          value={form.stress} 
+          min={1} 
+          max={10} 
+          onChange={handle} 
+        />
+
+        <SliderInput 
+          label="Caffeine Intake (mg)" 
+          name="caffeine" 
+          value={form.caffeine} 
+          min={0} 
+          max={500} 
+          step={10}
+          onChange={handle} 
+        />
+
+        <SliderInput 
+          label="Screen Time Before Bed (minutes)" 
+          name="screen_time" 
+          value={form.screen_time} 
+          min={0} 
+          max={180} 
+          step={5}
+          onChange={handle} 
+        />
+
+        <SliderInput 
+          label="Exercise (minutes)" 
+          name="exercise" 
+          value={form.exercise} 
+          min={0} 
+          max={120} 
+          step={5}
+          onChange={handle} 
+        />
+
+        <SliderInput 
+          label="Mood" 
+          name="mood" 
+          value={form.mood} 
+          min={1} 
+          max={10} 
+          onChange={handle} 
+        />
+
+        <button 
+          type="submit"
+          className="btn-accent w-full py-3 font-semibold rounded-lg transition duration-200 flex items-center justify-center"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Saving...
+            </>
+          ) : 'Save Sleep Log'}
+        </button>
+      </form>
+    </div>
+  );
+}

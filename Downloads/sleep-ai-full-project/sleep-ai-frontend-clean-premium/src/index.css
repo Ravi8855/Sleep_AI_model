@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --bg:#f5f7fb;
+  --panel:#ffffff;
+  --muted:#6b7280;
+  --accent:#0ea5a4;
+}
+
+html,body,#root{height:100%}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto; background:var(--bg); color:#0f1724;}
+
+/* Card component */
+.card{background:var(--panel); border-radius:12px; box-shadow: 0 6px 20px rgba(15,23,36,0.06); padding:1rem;}
+
+/* Button styles */
+.btn-accent{background:var(--accent); color:white; padding:.6rem 1rem; border-radius:10px; font-weight:600; transition: all 0.2s ease-in-out;}
+.btn-accent:hover{opacity: 0.9; transform: translateY(-1px);}
+.btn-accent:disabled{opacity: 0.6; cursor: not-allowed; transform: none;}
+
+/* Form elements */
+input, select, textarea{background:#fbfdff; border:1px solid #e6eef8; padding:.6rem; border-radius:8px; transition: all 0.2s ease-in-out;}
+input:focus, select:focus, textarea:focus{outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(14, 165, 164, 0.1);}
+
+/* Custom utility classes */
+.text-muted{color: var(--muted);}
+.bg-panel{background: var(--panel);}
+.text-accent{color: var(--accent);}
+.bg-accent{background: var(--accent);}
+
+/* Scrollbar styling */
+::-webkit-scrollbar{width: 8px; height: 8px;}
+::-webkit-scrollbar-track{background: #f1f1f1; border-radius: 4px;}
+::-webkit-scrollbar-thumb{background: #c5c5c5; border-radius: 4px;}
+::-webkit-scrollbar-thumb:hover{background: #a8a8a8;}
+
+/* Animation utilities */
+.animate-pulse-slow{animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;}
+@keyframes pulse-slow{0%, 100%{opacity: 1;}50%{opacity: 0.5;}}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card{padding: 0.75rem;}
+  body{font-size: 14px;}
+}

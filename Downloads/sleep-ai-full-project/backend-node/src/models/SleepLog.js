@@ -31,17 +31,17 @@ const SleepLogSchema = new mongoose.Schema({
   caffeine: { 
     type: Number, 
     min: 0, 
-    max: 10 
+    max: 500 
   },
   screenTime: { 
     type: Number, 
     min: 0, 
-    max: 24 
+    max: 180 
   },
   exercise: { 
     type: Number, 
     min: 0, 
-    max: 24 
+    max: 120 
   },
   mood: { 
     type: Number, 

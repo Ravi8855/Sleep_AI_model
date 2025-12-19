@@ -1,24 +1,33 @@
 const express = require("express");
 const router = express.Router();
 const SleepLog = require("../models/SleepLog");
-const authMiddleware = require("../middleware/auth");
 const logger = require("../utils/logger");
 
-// WEEKLY TREND
-router.get("/weekly", authMiddleware, async (req, res) => {
+// WEEKLY TREND - for demo purposes, use a dummy user ID
+router.get("/weekly", async (req, res) => {
   try {
-    logger.info('Fetching weekly trends', { userId: req.user.id });
+    logger.info('Fetching weekly trends', { userId: "demo-user-id" });
     
-    const logs = await SleepLog.find({ userId: req.user.id })
+    // For demo purposes, use a dummy user ID
+    const logs = await SleepLog.find({ userId: "demo-user-id" })
       .sort({ date: -1 })
       .limit(7);
 
     const weekly = logs.map(log => ({
+      _id: log._id,
       date: log.date,
+      duration: log.duration,
       score: log.prediction?.sleep_score ?? 0,
+      awakenings: log.awakenings,
+      stress: log.stress,
+      caffeine: log.caffeine,
+      screenTime: log.screenTime,
+      exercise: log.exercise,
+      mood: log.mood,
+      prediction: log.prediction
     }));
 
-    logger.info('Weekly trends fetched successfully', { userId: req.user.id, count: logs.length });
+    logger.info('Weekly trends fetched successfully', { userId: "demo-user-id", count: logs.length });
 
     res.json({ 
       success: true,
@@ -26,7 +35,7 @@ router.get("/weekly", authMiddleware, async (req, res) => {
     });
   } catch (err) {
     logger.error('Failed to load trend data', { 
-      userId: req.user.id,
+      userId: "demo-user-id",
       error: err.message, 
       stack: err.stack 
     });

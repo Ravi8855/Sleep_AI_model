@@ -112,3 +112,128 @@ Error: Database error
     at runTestInternal (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\jest-runner\build\testWorker.js:275:16)
     at runTest (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\jest-runner\build\testWorker.js:343:7)
     at Object.worker (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\jest-runner\build\testWorker.js:497:12)
+2025-12-18 00:03:18 [ERROR]: MongoDB connection error
+2025-12-18 00:03:18 [ERROR]: MongoDB connection error
+2025-12-18 00:03:23 [ERROR]: MongoDB connection error
+2025-12-18 00:03:23 [ERROR]: MongoDB connection error
+2025-12-18 00:03:28 [ERROR]: MongoDB connection error
+2025-12-18 00:03:28 [ERROR]: MongoDB connection error
+2025-12-18 00:20:22 [ERROR]: Unhandled error occurred
+SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at parse (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\body-parser\lib\types\json.js:92:19)
+    at C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\body-parser\lib\read.js:128:18
+    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)
+    at invokeCallback (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\raw-body\index.js:238:16)
+    at done (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\raw-body\index.js:287:7)
+    at IncomingMessage.emit (node:events:508:28)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+2025-12-18 00:20:22 [ERROR]: Unexpected server error
+SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at parse (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\body-parser\lib\types\json.js:92:19)
+    at C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\body-parser\lib\read.js:128:18
+    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)
+    at invokeCallback (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\raw-body\index.js:238:16)
+    at done (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\raw-body\index.js:287:7)
+    at IncomingMessage.emit (node:events:508:28)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+2025-12-18 00:52:49 [ERROR]: Failed to save sleep log
+ValidationError: SleepLog validation failed: screenTime: Path `screenTime` (30) is more than maximum allowed value (24)., exercise: Path `exercise` (30) is more than maximum allowed value (24).
+    at Document.invalidate (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\mongoose\lib\document.js:3221:32)
+    at C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\mongoose\lib\document.js:3014:17
+    at C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\mongoose\lib\schematype.js:1368:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+2025-12-18 01:32:13 [ERROR]: Unhandled error occurred
+SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at parse (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\body-parser\lib\types\json.js:92:19)
+    at C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\body-parser\lib\read.js:128:18
+    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)
+    at invokeCallback (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\raw-body\index.js:238:16)
+    at done (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\raw-body\index.js:287:7)
+    at IncomingMessage.emit (node:events:508:28)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+2025-12-18 01:32:13 [ERROR]: Unexpected server error
+SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+    at parse (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\body-parser\lib\types\json.js:92:19)
+    at C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\body-parser\lib\read.js:128:18
+    at AsyncResource.runInAsyncScope (node:async_hooks:214:14)
+    at invokeCallback (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\raw-body\index.js:238:16)
+    at done (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\raw-body\index.js:227:7)
+    at IncomingMessage.onEnd (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\raw-body\index.js:287:7)
+    at IncomingMessage.emit (node:events:508:28)
+    at endReadableNT (node:internal/streams/readable:1701:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+2025-12-18 10:37:34 [ERROR]: Failed to load trend data
+TypeError: Cannot read properties of undefined (reading 'id')
+    at C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\src\routes\trends.js:21:74
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-12-18 15:11:03 [ERROR]: MongoDB connection error
+2025-12-18 15:11:03 [ERROR]: MongoDB connection error
+2025-12-18 15:11:41 [ERROR]: MongoDB connection error
+2025-12-18 15:11:41 [ERROR]: MongoDB connection error
+2025-12-18 15:12:18 [ERROR]: MongoDB connection error
+2025-12-18 15:12:18 [ERROR]: MongoDB connection error
+2025-12-18 15:12:54 [ERROR]: MongoDB connection error
+2025-12-18 15:12:54 [ERROR]: MongoDB connection error
+2025-12-18 15:12:59 [ERROR]: MongoDB connection error
+2025-12-18 15:12:59 [ERROR]: MongoDB connection error
+2025-12-18 15:13:04 [ERROR]: MongoDB connection error
+2025-12-18 15:13:04 [ERROR]: MongoDB connection error
+2025-12-18 15:13:09 [ERROR]: MongoDB connection error
+2025-12-18 15:13:09 [ERROR]: MongoDB connection error
+2025-12-18 15:13:14 [ERROR]: MongoDB connection error
+2025-12-18 15:13:14 [ERROR]: MongoDB connection error
+2025-12-18 15:13:19 [ERROR]: MongoDB connection error
+2025-12-18 15:13:19 [ERROR]: MongoDB connection error
+2025-12-18 15:13:24 [ERROR]: MongoDB connection error
+2025-12-18 15:13:24 [ERROR]: MongoDB connection error
+2025-12-18 15:13:29 [ERROR]: MongoDB connection error
+2025-12-18 15:13:29 [ERROR]: MongoDB connection error
+2025-12-18 15:13:34 [ERROR]: MongoDB connection error
+2025-12-18 15:13:34 [ERROR]: MongoDB connection error
+2025-12-18 15:13:40 [ERROR]: MongoDB connection error
+2025-12-18 15:13:40 [ERROR]: MongoDB connection error
+2025-12-18 15:13:45 [ERROR]: MongoDB connection error
+2025-12-18 15:13:45 [ERROR]: MongoDB connection error
+2025-12-18 15:13:50 [ERROR]: MongoDB connection error
+2025-12-18 15:13:50 [ERROR]: MongoDB connection error
+2025-12-18 15:13:55 [ERROR]: MongoDB connection error
+2025-12-18 15:13:55 [ERROR]: MongoDB connection error
+2025-12-18 15:14:00 [ERROR]: MongoDB connection error
+2025-12-18 15:14:00 [ERROR]: MongoDB connection error
+2025-12-18 15:14:05 [ERROR]: MongoDB connection error
+2025-12-18 15:14:05 [ERROR]: MongoDB connection error
+2025-12-18 15:14:10 [ERROR]: MongoDB connection error
+2025-12-18 15:14:10 [ERROR]: MongoDB connection error
+2025-12-18 15:14:15 [ERROR]: MongoDB connection error
+2025-12-18 15:14:15 [ERROR]: MongoDB connection error
+2025-12-18 15:14:20 [ERROR]: MongoDB connection error
+2025-12-18 15:14:20 [ERROR]: MongoDB connection error
+2025-12-18 15:14:25 [ERROR]: MongoDB connection error
+2025-12-18 15:14:25 [ERROR]: MongoDB connection error
+2025-12-18 15:14:30 [ERROR]: MongoDB connection error
+2025-12-18 15:14:30 [ERROR]: MongoDB connection error
+2025-12-18 15:14:35 [ERROR]: MongoDB connection error
+2025-12-18 15:14:35 [ERROR]: MongoDB connection error
+2025-12-18 15:14:40 [ERROR]: MongoDB connection error
+2025-12-18 15:14:40 [ERROR]: MongoDB connection error
+2025-12-18 15:14:45 [ERROR]: MongoDB connection error
+2025-12-18 15:14:45 [ERROR]: MongoDB connection error
+2025-12-18 15:14:50 [ERROR]: MongoDB connection error
+2025-12-18 15:14:50 [ERROR]: MongoDB connection error
+2025-12-18 15:14:55 [ERROR]: MongoDB connection error
+2025-12-18 15:14:55 [ERROR]: MongoDB connection error
+2025-12-19 01:00:21 [ERROR]: Failed to load trend data
+MongoServerSelectionError: getaddrinfo ENOTFOUND ac-supkj1f-shard-00-00.ly0a1gk.mongodb.net
+    at Timeout._onTimeout (C:\Users\Admin\Downloads\sleep-ai-full-project\backend-node\node_modules\mongodb\lib\sdam\topology.js:278:38)
+    at listOnTimeout (node:internal/timers:608:17)
+    at process.processTimers (node:internal/timers:543:7)

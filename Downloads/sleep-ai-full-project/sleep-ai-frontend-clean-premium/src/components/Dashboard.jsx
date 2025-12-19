@@ -5,25 +5,14 @@ import api from '../api/client'
 
 function ScoreCard({score, date, subtitle}){
   return (
-    <div className="card p-6 flex flex-col items-center justify-center text-center">
-      <div className="text-sm font-medium text-muted mb-2">{subtitle}</div>
-      <div className="text-4xl font-bold text-[--accent]">{score ?? '--'}</div>
-      <div className="text-xs text-muted mt-2">{date ?? '—'}</div>
+    <div className="card flex flex-col items-center justify-center text-center p-8 bg-gradient-to-br from-white to-blue-50 border border-panel rounded-2xl shadow-sm hover:shadow-md transition-all duration-300">
+      <div className="text-base font-semibold text-muted mb-3">{subtitle}</div>
+      <div className="text-5xl font-bold text-accent mb-2">{score ?? '--'}</div>
+      <div className="text-sm text-muted">{date ?? '—'}</div>
     </div>
   )
 }
 
-function StatCard({title, value, icon}) {
-  return (
-    <div className="flex items-center p-3 rounded-lg bg-white/50">
-      <div className="mr-3 text-[--accent]">{icon}</div>
-      <div>
-        <div className="text-xs text-muted">{title}</div>
-        <div className="font-semibold">{value}</div>
-      </div>
-    </div>
-  );
-}
 
 export default function Dashboard(){
   const [latest, setLatest] = useState(null)
@@ -61,32 +50,44 @@ export default function Dashboard(){
   };
   
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <ScoreCard 
-          score={latest ? Math.round(latest.score) : '--'} 
+          score={latest ? Math.round(latest.score || latest.prediction?.sleep_score || 0) : '--'} 
           date={latest ? new Date(latest.date).toLocaleDateString() : null}
           subtitle="Today's Sleep Score"
         />
-        <div className='col-span-2 card p-4'>
-          <h4 className='text-sm font-medium text-muted mb-3'>Quick Stats</h4>
-          <div className='grid grid-cols-3 gap-2'>
-            <StatCard title="Avg Sleep" value={stats.avgSleep} icon="😴" />
-            <StatCard title="Awakenings" value={stats.awakenings} icon="⏰" />
-            <StatCard title="Consistency" value={stats.consistency} icon="📊" />
+        <div className='lg:col-span-2 bg-panel p-6 rounded-2xl'>
+          <h4 className='text-xl font-extrabold text-primary mb-5 tracking-tight'>Quick Stats</h4>
+          <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+            <div className='text-center'>
+              <div className='text-base font-bold text-muted tracking-wide'>Avg Sleep</div>
+              <div className='text-2xl font-extrabold text-primary mt-1'>{stats.avgSleep}</div>
+            </div>
+            <div className='text-center'>
+              <div className='text-base font-bold text-muted tracking-wide'>Awakenings</div>
+              <div className='text-2xl font-extrabold text-primary mt-1'>{stats.awakenings}</div>
+            </div>
+            <div className='text-center'>
+              <div className='text-base font-bold text-muted tracking-wide'>Consistency</div>
+              <div className='text-2xl font-extrabold text-primary mt-1'>{stats.consistency}</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="card p-4">
-          <h4 className='text-sm font-medium text-muted mb-2'>Sleep Quality</h4>
-          <div className="text-2xl font-bold">{latest ? getSleepQuality(latest.score) : '--'}</div>
-          <div className="w-full bg-gray-200 rounded-full h-2 mt-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="card p-6">
+          <h4 className='text-lg font-bold text-primary mb-3'>Sleep Quality</h4>
+          <div className="text-4xl font-bold text-accent mb-3">{latest ? getSleepQuality(latest.score || latest.prediction?.sleep_score || 0) : '--'}</div>
+          <div className="w-full bg-gray-200 rounded-full h-4 mt-5">
             <div 
-              className="bg-[--accent] h-2 rounded-full" 
-              style={{ width: `${latest ? Math.min(100, Math.max(0, latest.score)) : 0}%` }}
+              className="bg-accent h-4 rounded-full" 
+              style={{ width: `${latest ? Math.min(100, Math.max(0, latest.score || latest.prediction?.sleep_score || 0)) : 0}%` }}
             ></div>
+          </div>
+          <div className="text-center mt-3 text-lg font-semibold text-primary">
+            {latest ? Math.round(latest.score || latest.prediction?.sleep_score || 0) : '--'}/100
           </div>
         </div>
         
@@ -103,7 +104,7 @@ export default function Dashboard(){
         </div>
       </div>
 
-      <AdviceCard advice={latest ? `Based on your sleep score of ${Math.round(latest.score)}, aim for consistent bedtimes and reduce screen time before bed.` : 'No advice yet'} />
+      <AdviceCard advice={latest ? `Based on your sleep score of ${Math.round(latest.score || latest.prediction?.sleep_score || 0)}, aim for consistent bedtimes and reduce screen time before bed.` : 'No advice yet'} />
 
       <div className='card p-4'>
         <h3 className='text-lg font-semibold mb-4'>Weekly Trend</h3>

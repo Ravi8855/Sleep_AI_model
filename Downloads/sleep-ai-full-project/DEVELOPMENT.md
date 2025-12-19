@@ -1,444 +1,300 @@
-# SleepAI - Development Guide
+# SleepAI Development Guide
 
-This guide provides comprehensive information for developers working on the SleepAI project.
+This guide provides comprehensive instructions for setting up, running, and contributing to the SleepAI project.
 
-## 📁 Project Structure
+## 📋 Prerequisites
 
+Before you begin, ensure you have the following installed:
+
+- **Node.js** (v16 or higher)
+- **Python** (v3.8 or higher)
+- **MongoDB** (v4.4 or higher) or MongoDB Atlas account
+- **Git**
+- **Docker** (optional, for containerized deployment)
+- **npm** or **yarn**
+
+## 🚀 Quick Start
+
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd sleep-ai-full-project
+```
+
+### 2. Install Dependencies
+```bash
+# Install root dependencies
+npm install
+
+# Install all service dependencies
+npm run install:all
+```
+
+### 3. Configure Environment Variables
+Each service requires specific environment variables:
+
+#### Backend (.env in backend-node/)
+```env
+PORT=4000
+MONGO_URI=mongodb://localhost:27017/sleep_ai
+JWT_SECRET=your_jwt_secret_key
+PYTHON_PREDICT_URL=http://localhost:5000/predict
+FRONTEND_URL=http://localhost:5173
+```
+
+### 4. Start All Services
+```bash
+# Using npm script
+npm start
+
+# Using Makefile
+make dev
+
+# Or start individually
+npm run start:backend
+npm run start:ml
+npm run start:frontend
+```
+
+## 🏗️ Project Structure
+
+### Root Directory
 ```
 sleep-ai-full-project/
-├── backend-node/          # Node.js REST API
-│   ├── src/
-│   │   ├── config/        # Database configuration
-│   │   ├── middleware/    # Express middleware
-│   │   ├── models/        # Mongoose models
-│   │   ├── routes/        # API routes
-│   │   ├── services/      # Business logic
-│   │   ├── utils/         # Utility functions
-│   │   └── index.js       # Application entry point
-│   ├── logs/              # Application logs
-│   ├── .env.example       # Environment variables template
-│   ├── Dockerfile         # Docker configuration
-│   └── package.json       # Node.js dependencies
-├── microservice-predict/  # Python ML microservice
-│   ├── predict_service.py # Flask application
-│   ├── requirements.txt   # Python dependencies
-│   └── Dockerfile         # Docker configuration
-├── sleep-ai-frontend/     # React frontend
-│   ├── src/
-│   │   ├── api/           # API client
-│   │   ├── components/    # React components
-│   │   ├── pages/         # Page components
-│   │   ├── store/         # State management
-│   │   ├── App.jsx        # Main application
-│   │   └── main.jsx       # Entry point
-│   ├── index.html         # HTML template
-│   └── package.json       # Frontend dependencies
-├── dataset/               # Data generation and model training
-│   ├── generate_dataset.py # Synthetic data generator
-│   ├── train_model.py     # Model training script
-│   └── requirements.txt   # Dataset dependencies
-├── infra/                 # Infrastructure
-│   └── docker-compose.yml # Docker Compose configuration
-├── Makefile               # Project automation
-├── README.md              # Main documentation
-└── LICENSE                # License information
+├── backend-node/                 # Node.js backend service
+├── microservice-predict/         # Python ML prediction service
+├── sleep-ai-frontend-clean-premium/  # React frontend
+├── dataset/                      # Data generation and model training
+├── infra/                        # Docker configurations
+├── Makefile                      # Build automation
+├── package.json                  # Root project configuration
+└── README.md                     # Project documentation
 ```
 
-## 🛠️ Development Environment Setup
+## 🐳 Docker Development
 
-### Prerequisites
-
-1. **Node.js** (v16+)
-2. **Python** (v3.8+)
-3. **Docker** (optional but recommended)
-4. **MongoDB** (local or Atlas)
-5. **Git**
-
-### Initial Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd sleep-ai-full-project
-   ```
-
-2. **Set up backend**
-   ```bash
-   cd backend-node
-   npm install
-   cp .env.example .env
-   # Edit .env with your configuration
-   cd ..
-   ```
-
-3. **Set up frontend**
-   ```bash
-   cd sleep-ai-frontend-clean-premium
-   npm install
-   cd ..
-   ```
-
-4. **Set up ML service**
-   ```bash
-   cd microservice-predict
-   python -m venv venv
-   source venv/bin/activate  # Linux/macOS
-   # venv\Scripts\activate   # Windows
-   pip install -r requirements.txt
-   cd ..
-   ```
-
-5. **Generate and train model**
-   ```bash
-   cd dataset
-   pip install -r requirements.txt
-   python generate_dataset.py
-   python train_model.py
-   mv sleep_model.pkl ../microservice-predict/
-   cd ..
-   ```
-
-## ▶️ Running the Application
-
-### Development Mode
-
-1. **Start MongoDB** (if using local instance)
-   ```bash
-   # If using Docker
-   docker run -d -p 27017:27017 --name mongodb mongo:6
-   ```
-
-2. **Start ML service**
-   ```bash
-   cd microservice-predict
-   python predict_service.py
-   ```
-
-3. **Start backend**
-   ```bash
-   cd backend-node
-   npm run dev
-   ```
-
-4. **Start frontend**
-   ```bash
-   cd sleep-ai-frontend-clean-premium
-   npm run dev
-   ```
-
-### Docker Mode (Recommended)
-
+### Building and Running with Docker
 ```bash
-# Start all backend services
+# Build all services
+make build
+
+# Start all services
 make up
 
-# Start frontend separately
-cd sleep-ai-frontend-clean-premium
-npm run dev
+# View logs
+make logs
+
+# Stop services
+make down
 ```
 
-## 🔧 Development Workflow
-
-### Backend Development
-
-#### Adding New Routes
-
-1. Create a new route file in `backend-node/src/routes/`
-2. Define validation rules if needed
-3. Implement business logic in services
-4. Add error handling
-5. Update documentation
-
-#### Database Models
-
-1. Define schemas in `backend-node/src/models/`
-2. Add proper validation and indexes
-3. Include timestamps where appropriate
-
-#### Middleware
-
-1. Create middleware in `backend-node/src/middleware/`
-2. Ensure proper error handling
-3. Add logging where appropriate
-
-### Frontend Development
-
-#### Component Structure
-
-1. Create reusable components in `sleep-ai-frontend-clean-premium/src/components/`
-2. Create page components in `sleep-ai-frontend-clean-premium/src/pages/`
-3. Follow consistent naming conventions
-4. Use TypeScript for type safety
-
-#### State Management
-
-1. Use Zustand for global state
-2. Keep component state local when possible
-3. Follow the principle of least state
-
-#### Styling
-
-1. Use Tailwind CSS utility classes
-2. Define custom styles in `index.css`
-3. Maintain consistent design system
-
-### ML Service Development
-
-#### Model Updates
-
-1. Update data generation in `dataset/generate_dataset.py`
-2. Retrain model with `dataset/train_model.py`
-3. Test new model thoroughly
-4. Update fallback algorithm if needed
-
-#### API Extensions
-
-1. Add new endpoints in `microservice-predict/predict_service.py`
-2. Implement proper error handling
-3. Add logging for debugging
-4. Update documentation
+### Docker Configuration
+The `infra/docker-compose.yml` file defines three services:
+1. **mongo** - MongoDB database
+2. **node** - Node.js backend API
+3. **python** - Python ML prediction service
 
 ## 🧪 Testing
 
 ### Backend Testing
+```bash
+cd backend-node
+npm test
 
-1. **Unit Tests**
+# Watch mode
+npm run test:watch
+```
+
+### Test Structure
+- Unit tests for individual functions
+- Integration tests for API endpoints
+- Mock database connections for isolated testing
+
+## 📊 Machine Learning Development
+
+### Retraining the Model
+```bash
+cd dataset
+python generate_dataset.py
+python train_model.py
+```
+
+### Model Components
+- `generate_dataset.py` - Creates synthetic sleep data
+- `train_model.py` - Trains the Random Forest model
+- `sleep_model.pkl` - Serialized trained model
+
+## 🎨 Frontend Development
+
+### Component Structure
+```
+src/
+├── api/                  # API client configuration
+├── components/           # Reusable UI components
+├── pages/                # Page components
+├── store/                # State management
+└── App.jsx              # Main application component
+```
+
+### Styling
+- Tailwind CSS for utility-first styling
+- Custom CSS variables for theme consistency
+- Responsive design for all device sizes
+
+## 🔧 API Documentation
+
+### Base URLs
+- **Development**: http://localhost:4000/api
+- **Production**: https://your-domain.com/api
+
+### Authentication Endpoints
+```
+POST /api/auth/register
+POST /api/auth/login
+```
+
+### Sleep Tracking Endpoints
+```
+POST /api/sleep/add
+GET /api/sleep/logs
+```
+
+### Trends Endpoints
+```
+GET /api/trends/weekly
+GET /api/trends/monthly
+```
+
+## 🛡️ Security Best Practices
+
+### Authentication
+- JWT tokens with expiration
+- Password hashing with bcrypt
+- Secure cookie settings
+
+### Data Protection
+- Input validation and sanitization
+- Rate limiting to prevent abuse
+- CORS configuration for controlled access
+
+### Environment Variables
+Never commit sensitive information to version control. Use `.env` files and add them to `.gitignore`.
+
+## 📈 Performance Optimization
+
+### Backend
+- Connection pooling for MongoDB
+- Caching strategies for frequent requests
+- Efficient database indexing
+
+### Frontend
+- Code splitting for faster initial loads
+- Lazy loading for non-critical components
+- Image optimization techniques
+
+## 🌍 Internationalization (i18n)
+
+The application supports multiple languages through:
+- JSON translation files
+- Context-based language switching
+- RTL language support
+
+## 🐛 Debugging Tips
+
+### Common Issues and Solutions
+
+1. **Port Conflicts**
    ```bash
-   cd backend-node
-   npm test
+   # Kill processes on specific ports
+   lsof -ti:4000 | xargs kill -9
+   lsof -ti:5000 | xargs kill -9
+   lsof -ti:5173 | xargs kill -9
    ```
 
-2. **API Testing**
-   ```bash
-   # Test registration
-   curl -X POST http://localhost:4000/api/auth/register \
-     -H "Content-Type: application/json" \
-     -d '{"name":"Test User","email":"test@example.com","password":"password123"}'
-   ```
+2. **Database Connection Issues**
+   - Verify MongoDB is running
+   - Check connection string in .env
+   - Ensure network access to database
 
-### Frontend Testing
+3. **CORS Errors**
+   - Verify FRONTEND_URL in backend .env
+   - Check CORS configuration in src/index.js
 
-1. **Component Tests**
-   ```bash
-   cd sleep-ai-frontend-clean-premium
-   npm test
-   ```
-
-2. **End-to-End Tests**
-   ```bash
-   npm run test:e2e
-   ```
-
-### ML Service Testing
-
-1. **Model Testing**
-   ```bash
-   cd microservice-predict
-   python -c "import joblib; model = joblib.load('sleep_model.pkl'); print('Model loaded successfully')"
-   ```
-
-2. **API Testing**
-   ```bash
-   curl -X POST http://localhost:5000/predict \
-     -H "Content-Type: application/json" \
-     -d '{"duration":7.5,"awakenings":1,"stress":3,"caffeine":100,"screen_time":60,"exercise":30,"mood":7}'
-   ```
-
-## 📊 Logging and Monitoring
-
-### Backend Logging
-
-Logs are written to:
-- `backend-node/logs/combined.log` - All logs
-- `backend-node/logs/error.log` - Error logs only
-
-### ML Service Logging
-
-Console output includes:
-- Request information
-- Prediction results
-- Error messages
-
-### Frontend Logging
-
-Browser console includes:
-- API request/response logs
-- Error messages
-- Debug information
-
-## 🔒 Security Considerations
-
-### Backend Security
-
-1. **Authentication**
-   - JWT tokens with expiration
-   - Secure password hashing
-   - Token refresh mechanisms
-
-2. **Input Validation**
-   - Server-side validation
-   - Sanitization of user input
-   - Rate limiting
-
-3. **Data Protection**
-   - Environment variables for secrets
-   - HTTPS in production
-   - Database encryption where appropriate
-
-### Frontend Security
-
-1. **Client-Side Security**
-   - XSS prevention
-   - CSRF protection
-   - Secure storage of tokens
-
-2. **API Security**
-   - Proper error handling
-   - No exposure of sensitive information
-   - Input validation
-
-## 🚀 Deployment
-
-### Production Checklist
-
-1. **Environment Variables**
-   - Set `NODE_ENV=production`
-   - Use secure JWT secret
-   - Configure production database
-
-2. **Performance Optimization**
-   - Enable compression
-   - Optimize database queries
-   - Use CDN for static assets
-
-3. **Monitoring**
-   - Set up error tracking
-   - Implement health checks
-   - Configure alerts
-
-4. **Backup Strategy**
-   - Regular database backups
-   - Model version control
-   - Configuration backups
-
-### CI/CD Pipeline
-
-1. **Testing**
-   - Run all test suites
-   - Security scanning
-   - Performance testing
-
-2. **Building**
-   - Create optimized builds
-   - Containerize services
-   - Version artifacts
-
-3. **Deployment**
-   - Blue-green deployment
-   - Rollback strategy
-   - Health monitoring
+### Logging
+All services include comprehensive logging:
+- Backend: Winston logger with timestamp and level
+- Frontend: Console logging with context
+- ML Service: Standard Python logging
 
 ## 🤝 Contributing
 
-### Code Style
-
-1. **JavaScript/Node.js**
-   - Follow Airbnb JavaScript style guide
-   - Use ESLint for linting
-   - Maintain consistent naming conventions
-
-2. **Python**
-   - Follow PEP 8 style guide
-   - Use Black for formatting
-   - Add type hints where appropriate
-
-3. **React**
-   - Use functional components
-   - Implement proper error boundaries
-   - Optimize performance with memoization
-
 ### Git Workflow
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-1. **Branching Strategy**
-   - `main` - Production code
-   - `develop` - Development code
-   - Feature branches for new features
-   - Hotfix branches for urgent fixes
+### Code Style
+- Follow existing code patterns
+- Use meaningful variable and function names
+- Include JSDoc comments for functions
+- Write unit tests for new functionality
 
-2. **Commit Messages**
-   - Use conventional commits
-   - Be descriptive but concise
-   - Reference issues when applicable
+### Pull Request Guidelines
+- Describe the changes in detail
+- Include screenshots for UI changes
+- Reference related issues
+- Ensure all tests pass
 
-3. **Pull Requests**
-   - Review code thoroughly
-   - Ensure tests pass
-   - Update documentation
-   - Squash commits when merging
+## 🚨 Troubleshooting
 
-## 🆘 Troubleshooting
+### Services Won't Start
+1. Check if required ports are available
+2. Verify all dependencies are installed
+3. Confirm environment variables are set
+4. Check service-specific logs
 
-### Common Issues
+### Data Not Displaying
+1. Verify API endpoints are returning data
+2. Check browser console for JavaScript errors
+3. Confirm database connections
+4. Validate data format between services
 
-1. **Database Connection Errors**
-   - Check MongoDB is running
-   - Verify connection string
-   - Check firewall settings
+### Performance Issues
+1. Monitor resource usage
+2. Check database query performance
+3. Review network latency between services
+4. Optimize frontend bundle size
 
-2. **ML Service Not Responding**
-   - Ensure Python service is running
-   - Check model file exists
-   - Verify port configuration
-
-3. **Frontend API Errors**
-   - Check backend is running
-   - Verify CORS configuration
-   - Check network tab in browser dev tools
-
-4. **Authentication Issues**
-   - Verify JWT secret consistency
-   - Check token expiration settings
-   - Validate user credentials
-
-### Debugging Tips
-
-1. **Enable Debug Logging**
-   ```bash
-   # Backend
-   DEBUG=* npm run dev
-   
-   # ML Service
-   export FLASK_ENV=development
-   python predict_service.py
-   ```
-
-2. **Check Docker Logs**
-   ```bash
-   make logs
-   ```
-
-3. **Use Development Tools**
-   - Postman for API testing
-   - Browser dev tools for frontend debugging
-   - MongoDB Compass for database inspection
-
-## 📚 Resources
+## 📚 Additional Resources
 
 ### Documentation
-
-- [Node.js Documentation](https://nodejs.org/en/docs/)
-- [Express.js Documentation](https://expressjs.com/)
-- [React Documentation](https://reactjs.org/docs/getting-started.html)
-- [Flask Documentation](https://flask.palletsprojects.com/)
+- [Node.js Express Documentation](https://expressjs.com/)
+- [React Documentation](https://reactjs.org/)
+- [Scikit-learn Documentation](https://scikit-learn.org/)
 - [MongoDB Documentation](https://docs.mongodb.com/)
 
-### Learning Resources
+### Tools
+- **Postman** - API testing
+- **MongoDB Compass** - Database GUI
+- **Docker Desktop** - Container management
+- **Chrome DevTools** - Frontend debugging
 
-- [REST API Design](https://restfulapi.net/)
-- [Machine Learning with Scikit-learn](https://scikit-learn.org/stable/)
-- [Modern CSS with Tailwind](https://tailwindcss.com/docs)
-- [Docker Best Practices](https://docs.docker.com/develop/dev-best-practices/)
+## 📞 Support
 
-## 📄 License
+For issues not covered in this guide:
+1. Check existing GitHub issues
+2. Create a new issue with detailed information
+3. Include error messages and steps to reproduce
+4. Specify your development environment
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 🔄 Version Updates
+
+When pulling updates from the repository:
+```bash
+git pull origin main
+npm run install:all
+```
+
+Check CHANGELOG.md for breaking changes and migration steps.

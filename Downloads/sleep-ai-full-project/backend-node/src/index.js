@@ -23,7 +23,7 @@ app.use(limiter);
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  origin: [process.env.FRONTEND_URL || "http://localhost:5173", "http://localhost:5174", "http://localhost:3000"],
   credentials: true
 }));
 
@@ -41,11 +41,13 @@ connectDB();
 const authRoutes = require("./routes/auth");
 const sleepRoutes = require("./routes/sleep");
 const trendRoutes = require("./routes/trends");
+const goalsRoutes = require("./routes/goals");
 
 // Mount routes (IMPORTANT)
 app.use("/api/auth", authRoutes);
 app.use("/api/sleep", sleepRoutes);
 app.use("/api/trends", trendRoutes);
+app.use("/api/goals", goalsRoutes);
 
 // Error handler middleware
 const errorHandler = require('./middleware/errorHandler');

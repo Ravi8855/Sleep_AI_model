@@ -11,7 +11,7 @@ export default function SleepForm() {
     awakenings: 0,
     stress: 3,
     caffeine: 0,
-    screen_time: 30,
+    screenTime: 30,
     exercise: 30,
     mood: 4
   });
@@ -24,9 +24,21 @@ export default function SleepForm() {
   const submit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
+    // Debug: Check if token exists
+    const token = localStorage.getItem("token");
+    console.log('Token in SleepForm submit:', token);
 
     try {
-      const res = await api.post('/sleep/add', form);
+      const res = await api.post('/sleep/add', {
+        duration: form.duration,
+        awakenings: form.awakenings,
+        stress: form.stress,
+        caffeine: form.caffeine,
+        screenTime: form.screenTime,
+        exercise: form.exercise,
+        mood: form.mood
+      });
       setShowSuccess(true);
       // Reset form after successful submission
       setForm({
@@ -37,7 +49,7 @@ export default function SleepForm() {
         awakenings: 0,
         stress: 3,
         caffeine: 0,
-        screen_time: 30,
+        screenTime: 30,
         exercise: 30,
         mood: 4
       });
@@ -45,7 +57,8 @@ export default function SleepForm() {
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (err) {
       console.error('Save error', err);
-      alert('Save failed (maybe login required)');
+      console.error('Error response:', err.response);
+      alert('Save failed: ' + (err.response?.data?.message || err.message || 'Unknown error'));
     } finally {
       setLoading(false);
     }
@@ -53,10 +66,10 @@ export default function SleepForm() {
 
   // Helper function to render slider inputs
   const SliderInput = ({ label, name, value, min, max, step = 1, onChange }) => (
-    <div className="mb-4">
-      <div className="flex justify-between mb-1">
-        <label className="text-sm font-medium text-gray-700">{label}</label>
-        <span className="text-sm font-semibold text-[--accent]">{value}</span>
+    <div className="mb-5">
+      <div className="flex justify-between mb-2">
+        <label className="text-base font-semibold text-primary">{label}</label>
+        <span className="text-lg font-bold text-accent">{value}</span>
       </div>
       <input
         type="range"
@@ -65,9 +78,9 @@ export default function SleepForm() {
         step={step}
         value={value}
         onChange={(e) => onChange(name, parseFloat(e.target.value))}
-        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-[--accent]"
+        className="w-full h-3 bg-gray-200 rounded-full appearance-none cursor-pointer accent-accent"
       />
-      <div className="flex justify-between text-xs text-gray-500 mt-1">
+      <div className="flex justify-between text-sm text-muted mt-2">
         <span>{min}</span>
         <span>{max}</span>
       </div>
@@ -75,43 +88,52 @@ export default function SleepForm() {
   );
 
   return (
-    <div className="card p-6">
-      <h3 className="text-xl font-bold mb-4 text-center">Sleep Tracker</h3>
+    <div className="card">
+      <div className="text-center mb-6">
+        <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-teal-400 flex items-center justify-center mx-auto mb-4 shadow-lg">
+          <span className="text-2xl text-white">😴</span>
+        </div>
+        <h3 className="text-2xl font-bold text-primary">Sleep Tracker</h3>
+        <p className="text-secondary mt-2">Log your sleep data for personalized insights</p>
+      </div>
       
       {showSuccess && (
-        <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-center">
-          Sleep log saved successfully!
+        <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 text-green-700 rounded-xl text-center shadow-sm">
+          <div className="flex items-center justify-center">
+            <span className="text-xl mr-2">✓</span>
+            <span className="font-medium">Sleep log saved successfully!</span>
+          </div>
         </div>
       )}
 
-      <form onSubmit={submit} className="space-y-4">
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+      <form onSubmit={submit} className="space-y-6">
+        <div className="mb-2">
+          <label className="block text-sm font-semibold text-primary mb-2">Date</label>
           <input
             type="date"
             value={form.date}
             onChange={(e) => handle('date', e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[--accent] focus:border-transparent"
+            className="w-full p-3 border border-panel rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
+            <label className="block text-sm font-semibold text-primary mb-2">Start Time</label>
             <input
               type="time"
               value={form.startTime}
               onChange={(e) => handle('startTime', e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[--accent] focus:border-transparent"
+              className="w-full p-3 border border-panel rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">End Time</label>
+            <label className="block text-sm font-semibold text-primary mb-2">End Time</label>
             <input
               type="time"
               value={form.endTime}
               onChange={(e) => handle('endTime', e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[--accent] focus:border-transparent"
+              className="w-full p-3 border border-panel rounded-xl focus:ring-2 focus:ring-accent focus:border-transparent transition-all duration-200"
             />
           </div>
         </div>
@@ -156,8 +178,8 @@ export default function SleepForm() {
 
         <SliderInput 
           label="Screen Time Before Bed (minutes)" 
-          name="screen_time" 
-          value={form.screen_time} 
+          name="screenTime" 
+          value={form.screenTime} 
           min={0} 
           max={180} 
           step={5}
@@ -185,7 +207,7 @@ export default function SleepForm() {
 
         <button 
           type="submit"
-          className="btn-accent w-full py-3 font-semibold rounded-lg transition duration-200 flex items-center justify-center"
+          className="btn-accent w-full py-4 font-bold text-lg rounded-xl transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl"
           disabled={loading}
         >
           {loading ? (
@@ -196,7 +218,12 @@ export default function SleepForm() {
               </svg>
               Saving...
             </>
-          ) : 'Save Sleep Log'}
+          ) : (
+            <>
+              <span className="mr-2">💤</span>
+              Save Sleep Log
+            </>
+          )}
         </button>
       </form>
     </div>

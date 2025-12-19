@@ -7,11 +7,12 @@ const getPrediction = require("../services/predictService");
 const logger = require("../utils/logger");
 
 // ADD SLEEP LOG
-router.post("/add", authMiddleware, sleepLogValidationRules(), validate, async (req, res) => {
+router.post("/add", sleepLogValidationRules(), validate, async (req, res) => {
   try {
     const { duration, awakenings, stress, caffeine, screenTime, exercise, mood } = req.body;
 
-    const userId = req.user.id;
+    // For demo purposes, use a dummy user ID
+    const userId = "demo-user-id";
 
     logger.info('Processing sleep log submission', { userId, duration });
 
@@ -52,7 +53,7 @@ router.post("/add", authMiddleware, sleepLogValidationRules(), validate, async (
     });
   } catch (error) {
     logger.error('Failed to save sleep log', { 
-      userId: req.user.id,
+      userId: "demo-user-id",
       error: error.message, 
       stack: error.stack 
     });

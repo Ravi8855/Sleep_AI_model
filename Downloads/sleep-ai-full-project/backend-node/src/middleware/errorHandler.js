@@ -13,6 +13,10 @@ const errorHandler = (err, req, res, next) => {
     userId: req.user ? req.user.id : 'Not authenticated'
   });
   
+  // Also log to console for debugging
+  console.error('UNHANDLED ERROR:', err.message);
+  console.error('STACK:', err.stack);
+  
   // Mongoose bad ObjectId
   if (err.name === 'CastError') {
     logger.warn('Invalid ObjectId', { 

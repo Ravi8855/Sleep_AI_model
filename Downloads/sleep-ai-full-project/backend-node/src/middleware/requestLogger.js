@@ -13,39 +13,18 @@ const requestLogger = (req, res, next) => {
     url: req.originalUrl,
     ip: req.ip,
     userAgent: req.get('User-Agent'),
-    userId: req.user ? req.user.id : 'Not authenticated'
+    userId: req.user ? req.user.id : 'Not authenticated',
+    body: req.body  // Log request body for debugging
   });
   
-  // Capture response data
+  // Capture start time for response duration
   const start = Date.now();
   
   // Override res.end to capture response details
-  const oldWrite = res.write;
   const oldEnd = res.end;
-  let chunks = [];
   
-  res.write = function(chunk) {
-    chunks.push(chunk);
-    return oldWrite.apply(res, arguments);
-  };
-  
-  res.end = function(chunk) {
-    if (chunk) {
-      chunks.push(chunk);
-    }
-    
+  res.end = function(chunk, encoding) {
     const duration = Date.now() - start;
-    
-    // Try to parse response body for logging
-    let responseBody = {};
-    try {
-      const body = Buffer.concat(chunks).toString('utf8');
-      if (body && body.startsWith('{')) {
-        responseBody = JSON.parse(body);
-      }
-    } catch (e) {
-      // Ignore parsing errors
-    }
     
     // Log response
     logger.info('Outgoing response', {
@@ -53,16 +32,12 @@ const requestLogger = (req, res, next) => {
       url: req.originalUrl,
       statusCode: res.statusCode,
       duration: `${duration}ms`,
-      userId: req.user ? req.user.id : 'Not authenticated',
-      responseSize: Buffer.concat(chunks).length
+      userId: req.user ? req.user.id : 'Not authenticated'
     });
     
-    // Restore original methods
-    res.write = oldWrite;
+    // Restore original method and continue
     res.end = oldEnd;
-    
-    // Continue with original end
-    return oldEnd.apply(res, arguments);
+    return res.end(chunk, encoding);
   };
   
   next();

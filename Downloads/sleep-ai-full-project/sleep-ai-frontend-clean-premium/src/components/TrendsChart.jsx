@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine, Label } from 'recharts'
 import api from '../api/client'
 
 export default function TrendsChart(){
@@ -21,13 +21,32 @@ export default function TrendsChart(){
       })
   },[])
   
+  // Count occurrences of each date
+  const dateCounts = {};
+  data.forEach(d => {
+    const dateStr = new Date(d.date).toLocaleDateString('en-US');
+    dateCounts[dateStr] = (dateCounts[dateStr] || 0) + 1;
+  });
+  
   // Format data for chart
-  const formatted = data.map((d, index) => ({ 
-    date: new Date(d.date).toLocaleDateString('en-US', { weekday: 'short' }), 
-    fullDate: new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-    score: Math.round(d.score),
-    index
-  })).reverse() // Reverse to show oldest first
+  const formatted = data.map((d, index) => {
+    const dateObj = new Date(d.date);
+    const dateStr = dateObj.toLocaleDateString('en-US');
+    const timeStr = dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    
+    // If multiple entries for the same date, include time
+    const displayDate = dateCounts[dateStr] > 1 
+      ? `${dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}\n${timeStr}`
+      : dateObj.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    
+    return {
+      date: displayDate,
+      time: timeStr,
+      fullDate: dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' }),
+      score: Math.round(d.score),
+      index
+    };
+  }).reverse() // Reverse to show oldest first
   
   // Calculate average
   const average = formatted.length > 0 
@@ -68,10 +87,13 @@ export default function TrendsChart(){
                 <XAxis 
                   dataKey="date" 
                   stroke="#6b7280" 
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: 10 }}
                   tickLine={false}
+                  angle={-45}
+                  textAnchor="end"
+                  height={70}
                 >
-                  <Label value="Days" offset={-5} position="insideBottom" />
+                  <Label value="Date" offset={-5} position="insideBottom" />
                 </XAxis>
                 <YAxis 
                   domain={[0,100]} 
@@ -90,7 +112,7 @@ export default function TrendsChart(){
                   formatter={(value) => [`${value}`, 'Sleep Score']}
                   labelFormatter={(label, payload) => {
                     const item = payload[0];
-                    return item ? item.payload.fullDate : '';
+                    return item ? `${item.payload.fullDate} at ${item.payload.time}` : '';
                   }}
                 />
                 <ReferenceLine 

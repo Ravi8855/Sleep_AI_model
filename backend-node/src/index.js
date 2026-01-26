@@ -48,6 +48,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/sleep", sleepRoutes);
 app.use("/api/trends", trendRoutes);
 app.use("/api/goals", goalsRoutes);
+app.use("/api/advice", adviceRoutes);
+
 
 // Error handler middleware
 const errorHandler = require('./middleware/errorHandler');

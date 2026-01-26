@@ -1,0 +1,6 @@
+node_modules
+.env
+*.log
+backend-node/logs
+sleep-ai-frontend-clean-premium/node_modules
+microservice-predict/__pycache__

@@ -1,0 +1,27 @@
+{
+  "name": "sleep-ai-full-project",
+  "version": "1.0.0",
+  "description": "Professional Sleep Tracking & Analysis Platform with ML Predictions",
+  "scripts": {
+    "start": "concurrently \"cd backend-node && npm start\" \"cd microservice-predict && python predict_service.py\" \"cd sleep-ai-frontend-clean-premium && npm run dev\"",
+    "start:backend": "cd backend-node && npm start",
+    "start:ml": "cd microservice-predict && python predict_service.py",
+    "start:frontend": "cd sleep-ai-frontend-clean-premium && npm run dev",
+    "install:all": "npm install && cd backend-node && npm install && cd ../microservice-predict && pip install -r requirements.txt && cd ../sleep-ai-frontend-clean-premium && npm install",
+    "test": "cd backend-node && npm test"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.11"
+  },
+  "keywords": [
+    "sleep-tracking",
+    "machine-learning",
+    "health-tech",
+    "react",
+    "nodejs",
+    "python"
+  ],
+  "author": "SleepAI Team",
+  "license": "MIT"
+}

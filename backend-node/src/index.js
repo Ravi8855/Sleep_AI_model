@@ -42,6 +42,8 @@ const authRoutes = require("./routes/auth");
 const sleepRoutes = require("./routes/sleep");
 const trendRoutes = require("./routes/trends");
 const goalsRoutes = require("./routes/goals");
+const adviceRoutes = require("./routes/advice");
+
 
 // Mount routes (IMPORTANT)
 app.use("/api/auth", authRoutes);

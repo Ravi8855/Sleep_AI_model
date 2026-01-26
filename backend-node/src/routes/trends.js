@@ -19,16 +19,16 @@ router.get("/weekly", async (req, res) => {
 
     const weekly = logs.map(log => ({
       _id: log._id,
-      date: log.date,
-      duration: log.duration,
-      score: log.prediction?.sleep_score ?? 0,
-      awakenings: log.awakenings,
-      stress: log.stress,
-      caffeine: log.caffeine,
-      screenTime: log.screenTime,
-      exercise: log.exercise,
-      mood: log.mood,
-      prediction: log.prediction
+     router.get("/weekly", (req, res) => {
+  res.json({
+    success: true,
+    data: [
+      { date: "2026-01-01", duration: 7, score: 80 },
+      { date: "2026-01-02", duration: 6, score: 72 }
+    ]
+  });
+});
+
     }));
 
     logger.info("Weekly trends fetched successfully", {

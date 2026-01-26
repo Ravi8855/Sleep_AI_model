@@ -99,5 +99,9 @@ def calculate_sleep_score(x):
 
     return float(max(0, min(100, score)))
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+import os
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
+

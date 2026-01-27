@@ -18,15 +18,12 @@ router.post("/add", sleepLogValidationRules(), validate, async (req, res) => {
     logger.info('Processing sleep log submission', { userId, duration });
 
     // Call ML microservice
-    const prediction = await getPrediction({
-      duration,
-      awakenings,
-      stress,
-      caffeine,
-      screen_time: screenTime,
-      exercise,
-      mood,
-    });
+   let prediction = {
+  sleep_score: Math.round((duration * 10) - stress + mood),
+  model: "mock",
+  features: { duration, awakenings, stress, caffeine, screenTime, exercise, mood }
+};
+
 
     logger.info('ML prediction completed', { userId, sleepScore: prediction.sleep_score, model: prediction.model });
 
@@ -44,7 +41,8 @@ router.post("/add", sleepLogValidationRules(), validate, async (req, res) => {
       prediction,
     });
 
-    await log.save();
+    // await log.save(); // disabled until MongoDB is connected
+
     
     logger.info('Sleep log saved successfully', { userId, logId: log.id, sleepScore: prediction.sleep_score });
 

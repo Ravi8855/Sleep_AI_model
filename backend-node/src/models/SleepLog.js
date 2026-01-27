@@ -4,7 +4,7 @@ const SleepLogSchema = new mongoose.Schema({
   userId: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User', 
-    required: False
+    required: false
   },
   date: { 
     type: Date, 

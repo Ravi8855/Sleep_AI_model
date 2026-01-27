@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const SleepLogSchema = new mongoose.Schema({
-  userId: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', 
-    required: false
-  },
+ userId: { 
+  type: String,
+  required: true 
+},
+
   date: { 
     type: Date, 
     required: true 

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middleware/auth");
+const mongoose = require("mongoose"); // ✅ ADD THIS
 const { sleepLogValidationRules, validate } = require("../middleware/validation");
 const SleepLog = require("../models/SleepLog");
 const getPrediction = require("../services/predictService");
@@ -11,8 +12,8 @@ router.post("/add", sleepLogValidationRules(), validate, async (req, res) => {
   try {
     const { duration, awakenings, stress, caffeine, screenTime, exercise, mood } = req.body;
 
-    // For demo purposes, use a dummy user ID
-    const userId = "demo-user-id";
+    // ✅ FIX: use a real ObjectId instead of string
+    const userId = new mongoose.Types.ObjectId("000000000000000000000001");
 
     logger.info('Processing sleep log submission', { userId, duration });
 
@@ -53,7 +54,7 @@ router.post("/add", sleepLogValidationRules(), validate, async (req, res) => {
     });
   } catch (error) {
     logger.error('Failed to save sleep log', { 
-      userId: "demo-user-id",
+      userId: "000000000000000000000001",
       error: error.message, 
       stack: error.stack 
     });

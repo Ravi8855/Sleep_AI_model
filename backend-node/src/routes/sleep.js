@@ -54,7 +54,7 @@ router.post("/add", sleepLogValidationRules(), validate, async (req, res) => {
     });
   } catch (error) {
     logger.error('Failed to save sleep log', { 
-      userId: "000000000000000000000001",
+      userId: "000000000000000000000000",
       error: error.message, 
       stack: error.stack 
     });

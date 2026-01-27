@@ -29,16 +29,29 @@ export default function SleepForm() {
     const token = localStorage.getItem("token");
     console.log('Token in SleepForm submit:', token);
 
-    try {
-      const res = await api.post('/sleep/add', {
-        duration: form.duration,
-        awakenings: form.awakenings,
-        stress: form.stress,
-        caffeine: form.caffeine,
-        screenTime: form.screenTime,
-        exercise: form.exercise,
-        mood: form.mood
-      });
+    const res = await api.post(
+  '/sleep/add',
+  {
+    date: form.date,
+    startTime: form.startTime,
+    endTime: form.endTime,
+    duration: Number(form.duration),
+    awakenings: Number(form.awakenings),
+    stress: Number(form.stress),
+    caffeine: Number(form.caffeine),
+    screenTime: Number(form.screenTime),
+    exercise: Number(form.exercise),
+    mood: Number(form.mood)
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }
+);
+
+
+      
       setShowSuccess(true);
       // Reset form after successful submission
       setForm({

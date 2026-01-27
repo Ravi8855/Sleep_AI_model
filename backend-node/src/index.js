@@ -23,16 +23,25 @@ app.use(limiter);
 
 // CORS configuration
 app.use(cors({
-  origin: [
-    "https://sleep-ai-frontend.vercel.app",
-    "https://sleep-ai-frontend.vercel.app/",
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "http://localhost:3000"
-  ],
-  credentials: true
+  origin: function (origin, callback) {
+    const allowed = [
+      "https://sleep-ai-frontend.vercel.app",
+      "http://localhost:5173",
+      "http://localhost:3000"
+    ];
+
+    if (!origin || allowed.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS blocked: " + origin));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
+app.options("*", cors());
 
 // Request logging
 app.use(requestLogger);

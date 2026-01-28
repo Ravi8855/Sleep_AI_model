@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const SleepLog = require("../models/SleepLog");
-const mongoose = require("mongoose");
 
 router.get("/weekly", async (req, res) => {
   try {
@@ -22,10 +21,10 @@ router.get("/weekly", async (req, res) => {
     res.json({ success: true, data });
 
   } catch (err) {
-    console.error("Weekly trends error:", err.message);
-    res.status(500).json({
+    res.json({
       success: false,
-      message: "Failed to fetch weekly trends"
+      data: [],
+      error: err.message
     });
   }
 });

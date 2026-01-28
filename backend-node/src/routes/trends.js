@@ -4,12 +4,7 @@ const SleepLog = require("../models/SleepLog");
 
 router.get("/weekly", async (req, res) => {
   try {
-    // If DB is not connected, return empty safely
-    if (SleepLog.db.readyState !== 1) {
-      return res.json({ success: true, data: [] });
-    }
-
-    const logs = await SleepLog.find({ userId: "demo-user-id" })
+    const logs = await SleepLog.find({ userId: "demo-user" })
       .sort({ date: -1 })
       .limit(14);
 
@@ -17,19 +12,20 @@ router.get("/weekly", async (req, res) => {
       return res.json({ success: true, data: [] });
     }
 
-    const data = logs.map(l => ({
-      date: l.date,
-      duration: l.duration,
-      score: l.prediction?.sleep_score || 0
+    const data = logs.map(log => ({
+      date: log.date,
+      duration: log.duration,
+      score: log.prediction?.sleep_score || 0
     }));
 
     res.json({ success: true, data });
 
   } catch (err) {
-    console.error("Weekly trends error:", err.message);
+    console.error("Weekly trend error:", err.message);
+
     res.status(500).json({
       success: false,
-      message: "Failed to load weekly trends"
+      message: "Failed to fetch weekly trends"
     });
   }
 });

@@ -13,7 +13,8 @@ router.post("/add", sleepLogValidationRules(), validate, async (req, res) => {
     const { duration, awakenings, stress, caffeine, screenTime, exercise, mood } = req.body;
 
     // ✅ FIX: use a real ObjectId instead of string
-    const userId = "demo-user";
+    { userId: "demo-user" }
+
 
     logger.info('Processing sleep log submission', { userId, duration });
 

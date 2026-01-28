@@ -4,7 +4,7 @@ const SleepLog = require("../models/SleepLog");
 
 router.get("/weekly", async (req, res) => {
   try {
-    const logs = await SleepLog.find({ userId: "demo-user" })
+    const logs = await SleepLog.find({ userId: "demo-user-id" })
       .sort({ date: -1 })
       .limit(14);
 
@@ -21,9 +21,9 @@ router.get("/weekly", async (req, res) => {
     res.json({ success: true, data });
 
   } catch (err) {
-    res.json({
+    res.status(500).json({
       success: false,
-      data: [],
+      message: "Failed to fetch weekly trends",
       error: err.message
     });
   }

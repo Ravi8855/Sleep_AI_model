@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
- baseURL: "https://sleep-ai-model-1.onrender.com/api",
+ baseURL: "https://sleep-ai-model-2.onrender.com"
 
 });
 

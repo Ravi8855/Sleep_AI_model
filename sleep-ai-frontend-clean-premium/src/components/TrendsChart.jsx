@@ -5,6 +5,13 @@ import api from '../api/client'
 export default function TrendsChart(){
   const [data,setData]=useState([])
   const [loading, setLoading] = useState(true)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+  
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
   
   useEffect(()=> {
     setLoading(true)
@@ -55,59 +62,62 @@ export default function TrendsChart(){
   
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex items-center justify-center h-48 sm:h-64">
         <div className="text-muted">Loading trend data...</div>
       </div>
     )
   }
   
   return (
-    <div className="p-2">
+    <div className="p-2 sm:p-4 w-full overflow-x-auto">
       {formatted.length===0 ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="text-muted text-center">
-            <div className="text-lg mb-2">No trend data available</div>
-            <div className="text-sm">Start tracking your sleep to see trends</div>
+        <div className="flex items-center justify-center h-48 sm:h-64">
+          <div className="text-muted text-center px-4">
+            <div className="text-base sm:text-lg mb-2">No trend data available</div>
+            <div className="text-xs sm:text-sm">Start tracking your sleep to see trends</div>
           </div>
         </div>
       ) : (
         <div>
-          <div className="mb-4 flex justify-between items-center">
-            <div className="text-sm text-muted">
+          <div className="mb-3 sm:mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <div className="text-xs sm:text-sm text-muted">
               Last {formatted.length} days
             </div>
-            <div className="text-sm">
+            <div className="text-xs sm:text-sm">
               Average: <span className="font-semibold text-[--accent]">{average.toFixed(1)}</span>
             </div>
           </div>
-          <div style={{width:'100%', height:280}}>
-            <ResponsiveContainer>
-              <LineChart data={formatted} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+          <div style={{width:'100%', height: isMobile ? 250 : 320, minHeight: 250}}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={formatted} margin={{ top: 5, right: 10, left: isMobile ? 0 : 20, bottom: isMobile ? 50 : 5 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
                 <XAxis 
                   dataKey="date" 
                   stroke="#6b7280" 
-                  tick={{ fontSize: 10 }}
+                  tick={{ fontSize: isMobile ? 10 : 12 }}
                   tickLine={false}
-                  angle={-45}
-                  textAnchor="end"
-                  height={70}
+                  angle={isMobile ? -45 : -45}
+                  textAnchor={isMobile ? "end" : "end"}
+                  height={isMobile ? 60 : 70}
+                  interval={isMobile ? Math.floor(formatted.length / 3) : 0}
                 >
-                  <Label value="Date" offset={-5} position="insideBottom" />
+                  {!isMobile && <Label value="Date" offset={-5} position="insideBottom" />}
                 </XAxis>
                 <YAxis 
                   domain={[0,100]} 
                   stroke="#6b7280" 
-                  tick={{ fontSize: 12 }}
+                  tick={{ fontSize: isMobile ? 10 : 12 }}
                   tickLine={false}
                   axisLine={false}
+                  width={isMobile ? 30 : 50}
                 />
                 <Tooltip 
                   contentStyle={{ 
                     background: '#fff', 
                     borderRadius: 8, 
                     border: '1px solid #eee',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                    fontSize: isMobile ? 11 : 12
                   }} 
                   formatter={(value) => [`${value}`, 'Sleep Score']}
                   labelFormatter={(label, payload) => {
@@ -121,25 +131,25 @@ export default function TrendsChart(){
                   strokeDasharray="3 3" 
                   strokeWidth={1}
                 >
-                  <Label 
+                  {!isMobile && <Label 
                     value={`Avg: ${average.toFixed(1)}`} 
                     position="top" 
                     fill="#0ea5a4" 
                     fontSize={12} 
-                  />
+                  />}
                 </ReferenceLine>
                 <Line 
                   type="monotone" 
                   dataKey="score" 
                   stroke="#0ea5a4" 
-                  strokeWidth={3} 
+                  strokeWidth={isMobile ? 2 : 3} 
                   dot={{ 
-                    r: 4, 
+                    r: isMobile ? 3 : 4, 
                     fill: '#fff', 
                     strokeWidth: 2, 
                     stroke: '#0ea5a4' 
                   }} 
-                  activeDot={{ r: 6, stroke: '#0ea5a4', strokeWidth: 2, fill: '#fff' }}
+                  activeDot={{ r: isMobile ? 4 : 6, stroke: '#0ea5a4', strokeWidth: 2, fill: '#fff' }}
                 />
               </LineChart>
             </ResponsiveContainer>

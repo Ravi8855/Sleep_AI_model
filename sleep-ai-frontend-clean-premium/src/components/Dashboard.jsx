@@ -42,11 +42,10 @@ export default function Dashboard(){
   },[])
   
   const getSleepQuality = (score) => {
-    if (score >= 80) return 'Excellent';
-    if (score >= 60) return 'Good';
-    if (score >= 40) return 'Fair';
-    if (score >= 20) return 'Poor';
-    return 'Very Poor';
+    if (score >= 85) return 'Ideal';
+    if (score >= 70) return 'Excellent';
+    if (score >= 7) return 'Good';
+    return 'Needs Improvement';
   };
   
   return (

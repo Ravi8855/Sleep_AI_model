@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const authMiddleware = require("../middleware/auth");
 const SleepLog = require("../models/SleepLog");
 
-router.get("/weekly", async (req, res) => {
+router.get("/weekly", authMiddleware, async (req, res) => {
   try {
-    const logs = await SleepLog.find({ userId: "demo-user" })
+    const userId = req.user.id;
+    const logs = await SleepLog.find({ userId })
       .sort({ date: -1 })
       .limit(14);
 

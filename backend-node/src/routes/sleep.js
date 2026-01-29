@@ -8,30 +8,37 @@ const getPrediction = require("../services/predictService");
 const logger = require("../utils/logger");
 
 // ADD SLEEP LOG
-router.post("/add", sleepLogValidationRules(), validate, async (req, res) => {
+router.post("/add", authMiddleware, sleepLogValidationRules(), validate, async (req, res) => {
   try {
-    const { duration, awakenings, stress, caffeine, screenTime, exercise, mood } = req.body;
-
-    // ✅ FIX: use a real ObjectId instead of string
-    { userId: "demo-user" }
-
+    const { duration, awakenings, stress, caffeine, screenTime, exercise, mood, date } = req.body;
+    const userId = req.user.id;
 
     logger.info('Processing sleep log submission', { userId, duration });
 
     // Call ML microservice
-   let prediction = {
-  sleep_score: Math.round((duration * 10) - stress + mood),
-  model: "mock",
-  features: { duration, awakenings, stress, caffeine, screenTime, exercise, mood }
-};
-
+    let prediction = await getPrediction({
+      duration: Number(duration),
+      awakenings: Number(awakenings),
+      stress: Number(stress),
+      caffeine: Number(caffeine),
+      screen_time: Number(screenTime),
+      exercise: Number(exercise),
+      mood: Number(mood)
+    }).catch(err => {
+      logger.warn('ML service call failed, using fallback', { error: err.message });
+      return {
+        sleep_score: Math.round((duration * 10) - stress + mood),
+        model: "fallback_formula",
+        features: { duration, awakenings, stress, caffeine, screenTime, exercise, mood }
+      };
+    });
 
     logger.info('ML prediction completed', { userId, sleepScore: prediction.sleep_score, model: prediction.model });
 
     // Save MongoDB log
     const log = new SleepLog({
       userId,
-      date: new Date(),
+      date: date || new Date(),
       duration,
       awakenings,
       stress,
@@ -42,10 +49,9 @@ router.post("/add", sleepLogValidationRules(), validate, async (req, res) => {
       prediction,
     });
 
-    // await log.save(); // disabled until MongoDB is connected
+    await log.save();
 
-    
-    logger.info('Sleep log saved successfully', { userId, logId: log.id, sleepScore: prediction.sleep_score });
+    logger.info('Sleep log saved successfully', { userId, logId: log._id, sleepScore: prediction.sleep_score });
 
     res.json({ 
       success: true, 
@@ -53,13 +59,14 @@ router.post("/add", sleepLogValidationRules(), validate, async (req, res) => {
     });
   } catch (error) {
     logger.error('Failed to save sleep log', { 
-      userId: "000000000000000000000000",
+      userId: req.user?.id || "unknown",
       error: error.message, 
       stack: error.stack 
     });
     res.status(500).json({ 
       success: false,
-      message: "Failed to save sleep log" 
+      message: "Failed to save sleep log",
+      error: error.message 
     });
   }
 });

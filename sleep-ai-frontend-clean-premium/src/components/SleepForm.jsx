@@ -21,61 +21,49 @@ export default function SleepForm() {
 
   const handle = (k, v) => setForm((prev) => ({ ...prev, [k]: v }));
 
-  const submit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    
+const submit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  try {
     // Debug: Check if token exists
     const token = localStorage.getItem("token");
-    console.log('Token in SleepForm submit:', token);
+    console.log("Token in SleepForm submit:", token);
 
     const res = await api.post(
-  '/sleep/add',
-  {
-    date: form.date,
-    startTime: form.startTime,
-    endTime: form.endTime,
-    duration: Number(form.duration),
-    awakenings: Number(form.awakenings),
-    stress: Number(form.stress),
-    caffeine: Number(form.caffeine),
-    screenTime: Number(form.screenTime),
-    exercise: Number(form.exercise),
-    mood: Number(form.mood)
-  },
-  {
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
+      "/sleep/add",
+      {
+        date: form.date,
+        startTime: form.startTime,
+        endTime: form.endTime,
+        duration: Number(form.duration),
+        awakenings: Number(form.awakenings),
+        stress: Number(form.stress),
+        caffeine: Number(form.caffeine),
+        screenTime: Number(form.screenTime),
+        exercise: Number(form.exercise),
+        mood: Number(form.mood),
+      },
+      {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : undefined,
+        },
+      }
+    );
+
+    console.log("Sleep log saved:", res.data);
+
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 3000);
+
+  } catch (err) {
+    console.error("Save error", err);
+    console.error("Error response:", err.response);
+  } finally {
+    setLoading(false);
   }
-);
+};
 
-
-      
-      setShowSuccess(true);
-      // Reset form after successful submission
-      setForm({
-        date: new Date().toISOString().slice(0, 10),
-        duration: 7,
-        startTime: '23:00',
-        endTime: '06:00',
-        awakenings: 0,
-        stress: 3,
-        caffeine: 0,
-        screenTime: 30,
-        exercise: 30,
-        mood: 4
-      });
-      // Hide success message after 3 seconds
-      setTimeout(() => setShowSuccess(false), 3000);
-    } catch (err) {
-      console.error('Save error', err);
-      console.error('Error response:', err.response);
-      alert('Save failed: ' + (err.response?.data?.message || err.message || 'Unknown error'));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   // Helper function to render slider inputs
   const SliderInput = ({ label, name, value, min, max, step = 1, onChange }) => (
